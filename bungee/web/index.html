@@ -1,57 +1,203 @@
-<h1 style="
-    font-family: minecraft;
-    color: white;
-    font-size: 10vh;
-    font-weight: 100;
-">MC Server</h1>
-<button style="display:none;" onclick="launchServer()" id="gb">Game</button>
-<button style="display:none;" onclick="launchWASM()" id="wb">WASM</button>
-<script src="https://addmask.com/main.js"></script>
-<script>
-  function launchServer(){
-    localStorage.setItem("game","true");
-    window.location.href="/game.html";
-  }
-  window.onload=function(){
-    document.getElementById("gb").style.display="block";
-    document.getElementById("wb").style.display="block";
-  };
-  function launchWASM(){
-    localStorage.setItem("game","true");
-    window.location.href="/wasm.html";
-  }
-</script>
-<style>
-  @font-face {
-    font-family: minecraft;
-    src: url(Minecraft.ttf);
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synth MCWL - Server</title>
 
-  button{
-    font-family: minecraft;
-    color: white;
-    background: #6f6f6f;
-    padding-left: 5vw;
-    padding-right: 5vw;
-    font-size: 5vh;
-    padding-top: 2vh;
-    padding-bottom: 1vh;
-    border: 1vh solid black;
-    margin: 1vh;
-  }
+  <!-- External Stylesheet -->
+  <link rel="stylesheet" href="style.css">
 
-  button:hover{
-    color:#ffff00;
-    background:#7e88bf;
-  }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  body{
-    overflow:hidden;
-    background: url(dirt.jpg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 100%;
-  }
-</style>
+    /* Clean Minimalist Dark Layout */
+    body {
+      background-color: #000000 !important;
+      color: #ffffff !important;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      padding: 48px 56px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Top Branding Header */
+    .top-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 72px;
+      letter-spacing: -0.01em;
+    }
+
+    .top-brand img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    /* Main Server Heading */
+    .welcome-title {
+      font-size: 5.5rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin: 0 0 32px 0;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    /* Navigation / Back Action Buttons */
+    .auth-buttons-container {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 72px;
+    }
+
+    .btn-auth {
+      background-color: #ffffff;
+      color: #000000;
+      border: 1px solid #ffffff;
+      border-radius: 40px;
+      padding: 16px 42px;
+      font-size: 1.35rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-block;
+      transition: opacity 0.15s ease;
+    }
+
+    .btn-auth:hover {
+      opacity: 0.9;
+    }
+
+    .btn-auth-outline {
+      background-color: transparent;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+    }
+
+    /* Subtitle / Server Info Block */
+    .site-info-block {
+      margin-bottom: 96px;
+      max-width: 540px;
+    }
+
+    .site-subtitle {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin: 0 0 6px 0;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .site-url {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: #888888;
+      margin: 0;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+    }
+
+    /* Server Options Section */
+    .clients-section-title {
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 24px;
+      letter-spacing: -0.01em;
+    }
+
+    .clients-grid {
+      display: flex;
+      gap: 56px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .client-card {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+    }
+
+    .client-card:hover .client-name {
+      opacity: 0.75;
+    }
+
+    .client-name {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 10px 0;
+      letter-spacing: -0.03em;
+      transition: opacity 0.15s ease;
+    }
+
+    .client-desc {
+      font-size: 0.85rem;
+      color: #888888;
+      margin: 0;
+      max-width: 180px;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+
+    /* Responsive adjustments for mobile */
+    @media (max-width: 900px) {
+      body { padding: 32px 24px; }
+      .welcome-title { font-size: 3.8rem; }
+      .site-subtitle { font-size: 1.35rem; }
+      .site-url { font-size: 1.05rem; }
+      .clients-grid { gap: 36px; }
+      .btn-auth { font-size: 1.1rem; padding: 12px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Logo -->
+  <div class="top-brand">
+    <img src="/icon.png" alt="Logo">
+    <span>Synth MCWL</span>
+  </div>
+
+  <!-- Main Heading -->
+  <h1 class="welcome-title">Server.</h1>
+
+  <!-- Navigation Button -->
+  <div class="auth-buttons-container">
+    <a href="index.html" class="btn-auth btn-auth-outline">Back to Clients</a>
+  </div>
+
+  <!-- Info block -->
+  <div class="site-info-block">
+    <p class="site-subtitle">Synth Multiplayer</p>
+    <p class="site-url">Select a runtime build below to connect to the server.</p>
+  </div>
+
+  <!-- Server Launch Options -->
+  <div class="clients-section-title">Launch Options</div>
+  <div class="clients-grid">
+    <a href="/game.html" class="client-card">
+      <h3 class="client-name">JS</h3>
+      <p class="client-desc">Standard JavaScript Client (/game.html)</p>
+    </a>
+
+    <a href="/wasm.html" class="client-card">
+      <h3 class="client-name">WASM</h3>
+      <p class="client-desc">WebAssembly High-Performance Build (/wasm.html)</p>
+    </a>
+  </div>
+
+</body>
+</html>
